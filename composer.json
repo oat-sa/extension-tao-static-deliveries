@@ -1,0 +1,34 @@
+{
+    "name": "oat-sa/extension-tao-static-deliveries",
+    "description": "TAO Static Deliveries to expose static delivery with runtime and map.",
+    "authors": [
+        {
+            "name": "Open Assessment Technologies S.A.",
+            "homepage": "http://www.taotesting.com"
+        },
+        {
+            "name": "Moyon Camille",
+            "role": "Developer"
+        }
+    ],
+    "homepage" : "http://www.taotesting.com",
+    "license" : "GPL-2.0-only",
+    "keywords": [
+        "tao",
+        "computer-based-assessment",
+        "oat"
+    ],
+    "type": "tao-extension",
+    "extra": {
+        "tao-extension-name": "taoStaticDeliveries"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "oat-sa/oatbox-extension-installer": "~1.1||dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "oat\\taoStaticDeliveries\\": ""
+        }
+    }
+}
