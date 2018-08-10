@@ -36,7 +36,7 @@ class RestStaticDeliveryExporter extends \tao_actions_RestController
     public function assembly()
     {
         if ($this->getRequestMethod() != \Request::HTTP_GET) {
-            throw new \common_exception_MethodNotAllowed("Only GET method is accepted by the 'Assembly' TAO Mobile App Service.");
+            throw new \common_exception_MethodNotAllowed("Only GET method is accepted to export 'Assembly'.");
         }
 
         // Retrieve delivery information.

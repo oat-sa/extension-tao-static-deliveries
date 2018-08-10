@@ -1,6 +1,21 @@
 <?php
 /**
- * Copyright (c) 2018 (original work) Open Assessment Technologies SA.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
+ *
  */
 
 namespace oat\taoStaticDeliveries\model\assembly;
@@ -22,10 +37,9 @@ use oat\taoQtiTest\models\runner\QtiRunnerService;
 use oat\taoQtiTest\models\runner\RunnerServiceContext;
 
 /**
- * Class MobileAssembler
+ * Class StaticDeliveryExporter
  *
- * An extension of the TAO AssemblerService class aiming at compiling Mobile App compliant
- * Delivery Assemblies.
+ * An extension of the TAO AssemblerService class aiming at compiling static Delivery Assemblies.
  *
  * @package oat\taoStaticDeliveries\model\assemblies
  */
@@ -56,9 +70,9 @@ class StaticDeliveryExporter extends ConfigurableService
         $zipArchive = new \ZipArchive();
         $zipArchive->open($path, \ZipArchive::CREATE);
 
-        $this->logDebug("Transforming Delivery Assembly '" . $compiledDelivery->getUri() . "' into a Mobile Assembly...");
+        $this->logDebug("Transforming Delivery Assembly '" . $compiledDelivery->getUri() . "' into a static Assembly...");
 
-        AssembliesUtils::transformToMobileAssembly($zipArchive);
+        AssembliesUtils::transformToStaticAssembly($zipArchive);
 
         // We now have to instantiate a Delivery Execution of this Delivery, in order to be able
         // to provide the initialization data to an assembly consumer.
@@ -104,7 +118,7 @@ class StaticDeliveryExporter extends ConfigurableService
 
         } catch (\Exception $e) {
             throw new \common_Exception(
-                "An unexpected error occurred while instantiating the TAO Mobile App Assembly Delivery execution.",
+                "An unexpected error occurred while instantiating static Assembly Delivery execution.",
                 0,
                 $e
             );
@@ -173,7 +187,7 @@ class StaticDeliveryExporter extends ConfigurableService
         $deliveryExecution = $deliveryExecutionStateService->createDeliveryExecution(
             $deliveryUri,
             $user,
-            "TAO Mobile App Assembly Delivery Execution '${deliveryUri}'"
+            "Static Assembly Delivery Execution '${deliveryUri}'"
         );
 
         return $deliveryExecution;

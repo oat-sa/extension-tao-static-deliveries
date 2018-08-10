@@ -27,7 +27,7 @@ use qtism\data\storage\php\PhpStorageException;
 /***
  * Class AssembliesUtils
  *
- * This class provides utility methods to deal with Mobile App compliant assemblies.
+ * This class provides utility methods to deal with static assemblies.
  *
  * @package oat\taoStaticDeliveries\model\assembly
  */
@@ -36,12 +36,12 @@ class AssembliesUtils
     /**
      * Transform to Static Assembly
      *
-     * Transforms a given TAO Assembly archive into a Mobile App compliant Assembly archive.
+     * Transforms a given TAO Assembly archive into a static assembly.
      *
      * @param \ZipArchive $zipArchive
      * @throws \Exception
      */
-    public static function transformToMobileAssembly(\ZipArchive $zipArchive)
+    public static function transformToStaticAssembly(\ZipArchive $zipArchive)
     {
         $files = \tao_helpers_File::getAllZipNames($zipArchive);
         $testDefinition = self::getTestDefinition($zipArchive, $files);
