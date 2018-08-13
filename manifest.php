@@ -27,6 +27,9 @@ return array(
     'author' => 'Open Assessment Technologies SA',
     'requires' => array(
         'tao' => '>=19.17.1',
+        'taoQtiTest' => '>=25.7.0',
+        'taoDelivery' => '>=9.12.0',
+        'taoDeliveryRdf' => '>=5.0.0',
     ),
     'managementRole' => 'http://www.taotesting.com/Ontologies/generis.rdf#taoStaticDeliveries',
     'acl' => [
@@ -36,6 +39,9 @@ return array(
         'rdf' => [
         ],
         'php' => [
+            oat\taoQtiTest\scripts\cli\SetNewTestRunner::class,
+            oat\taoStaticDeliveries\scripts\install\RegisterDeleteDeliveryExecutionService::class,
+            oat\taoStaticDeliveries\scripts\install\RegisterFileSystem::class
         ]
     ],
     'uninstall' => array(
