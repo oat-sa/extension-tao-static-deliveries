@@ -1,0 +1,104 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Static delivery REST API",
+        "description": "#### The static delivery  REST API. An API to export delivery with all required data (TestMap & Runtime)."
+    },
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "produces": [
+        "application/zip"
+    ],
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Static Deliveries",
+            "description": "Operations about static delivery"
+        }
+    ],
+    "paths": {
+        "/taoStaticDeliveries/RestStaticDeliveryExporter/assembly": {
+            "get": {
+                "description": "Export a static delivery from the TAO platform.",
+                "tags": [
+                    "static delivery exporter"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Export of a static delivery exporter",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Missing or invalid delivery identifier",
+                        "examples": {
+                            "application/json": {
+                                "success": false,
+                                "errorCode": 0,
+                                "errorMsg": "At least one mandatory parameter was required but found missing in your request",
+                                "version": "3.1.0"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to access this functionality"
+                    },
+                    "500": {
+                        "description": "Internal error (should not occur)"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "deliveryIdentifier",
+                        "in": "query",
+                        "description": "The urlencoded of the delivery to export.",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "errorModel": {
+            "type": "object",
+            "description": "contain error",
+            "required": [
+                "success",
+                "version",
+                "errorCode",
+                "errorMsg"
+            ],
+            "properties": {
+                "success": {
+                    "type": "boolean",
+                    "description": "False on failure",
+                    "default": false
+                },
+                "version": {
+                    "type": "string",
+                    "description": "Tao version"
+                },
+                "errorCode": {
+                    "type": "integer",
+                    "description": "Error code"
+                },
+                "errorMsg": {
+                    "type": "string",
+                    "description": "Error description"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "taoStaticDeliveries on Github",
+        "url": "https://github.com/oat-sa/extension-tao-static-deliveries"
+    }
+}
