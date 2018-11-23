@@ -39,6 +39,7 @@ class AssembliesUtils
      * Transforms a given TAO Assembly archive into a static assembly.
      *
      * @param \ZipArchive $zipArchive
+     * @return \ZipArchive the transformed zip archive (same ref)
      * @throws \Exception
      */
     public static function transformToStaticAssembly(\ZipArchive $zipArchive)
@@ -46,13 +47,16 @@ class AssembliesUtils
         $files = \tao_helpers_File::getAllZipNames($zipArchive);
         $testDefinition = self::getTestDefinition($zipArchive, $files);
         $manifest = json_decode($zipArchive->getFromName('manifest.json'), true);
+
         $map = self::sortItemAssemblyFiles($testDefinition->getDocumentComponent(), $files, $manifest);
 
         $renameMap = [];
         foreach ($map as $privatePath => $publicPath) {
 
-            $itemIdentifier = self::getItemIdentifierFromPrivatePath($privatePath, $manifest, $testDefinition->getDocumentComponent());
-            $itemLanguages = self::getLanguagesFromItemPrivateDirectory($files, $privatePath);
+            $itemData       = self::getItemDataFromPrivatePath($privatePath, $manifest, $testDefinition->getDocumentComponent());
+            $itemIdentifier = $itemData['identifier'];
+            $itemUri        = $itemData['uri'];
+            $itemLanguages  = self::getLanguagesFromItemPrivateDirectory($files, $privatePath);
             $itemLanguagesToExclude = [];
 
             if (count($itemLanguages) > 1) {
@@ -65,15 +69,28 @@ class AssembliesUtils
                 \tao_helpers_File::excludeFromZip($zipArchive, "/${quoted}.+/");
             }
 
-            $renameMap[$privatePath . '/' . $itemLanguages[0]] = "items/${itemIdentifier}";
+            $privatePathWithLang = $privatePath . '/' . $itemLanguages[0];
+            $publicPathWithLang  = $publicPath . '/' . $itemLanguages[0];
+            $itemPath            = "items/${itemIdentifier}";
+
+            $renameMap[$privatePathWithLang] = $itemPath;
 
             if ($publicPath !== null) {
-                $renameMap[$publicPath . '/' . $itemLanguages[0]] = "items/${itemIdentifier}";
+                $renameMap[$publicPathWithLang] = $itemPath;
 
                 foreach ($itemLanguagesToExclude as $itemLanguageToExclude) {
                     $quoted = preg_quote("${publicPath}/${itemLanguageToExclude}/", '/');
                     \tao_helpers_File::excludeFromZip($zipArchive, "/${quoted}.+/");
                 }
+            }
+
+            //we add the item HREF/URI to the item metadata file
+            $itemMetaDataFile    = "${privatePathWithLang}/metadataElements.json";
+            if( ($itemMetadataContent = $zipArchive->getFromName($itemMetaDataFile)) !== false) {
+                $itemMetadata = json_decode($itemMetadataContent, true);
+                $itemMetadata['@uri'] = $itemUri;
+
+                $zipArchive->addFromString($itemMetaDataFile, json_encode($itemMetadata));
             }
         }
 
@@ -90,7 +107,10 @@ class AssembliesUtils
         \tao_helpers_File::excludeFromZip($zipArchive, '/adaptive-section-map\.json$/');
         \tao_helpers_File::excludeFromZip($zipArchive, '/compilation-info\.json$/');
         \tao_helpers_File::excludeFromZip($zipArchive, '/test-index\.json$/');
+        \tao_helpers_File::excludeFromZip($zipArchive, '/test-metadata\.json$/');
         \tao_helpers_File::excludeFromZip($zipArchive, '/\/$/');
+
+        return $zipArchive;
     }
 
     /**
@@ -105,6 +125,7 @@ class AssembliesUtils
 
         foreach ($assessmentTest->getComponentsByClassName('assessmentItemRef') as $assessmentItemRef) {
             $href = $assessmentItemRef->getHref();
+
             $hrefValues = explode('|', $href);
             list(, $public, $private) = $hrefValues;
 
@@ -140,19 +161,24 @@ class AssembliesUtils
     }
 
     /**
+     * Get the item ref data
      * @param string $path
      * @param array $map
      * @param AssessmentTest $assessmentTest
-     * @return bool
+     * @return array  with the item identifier, the item href and URI
      */
-    private static function getItemIdentifierFromPrivatePath($path, array $map, AssessmentTest $assessmentTest)
+    private static function getItemDataFromPrivatePath($path, array $map, AssessmentTest $assessmentTest)
     {
         $privateDir = array_search($path, $map['dir']);
 
         foreach ($assessmentTest->getComponentsByClassName('assessmentItemRef') as $itemRef) {
             $parts = explode('|', $itemRef->getHref());
             if ($privateDir === $parts[2]) {
-                return $itemRef->getIdentifier();
+                return [
+                    'identifier' => $itemRef->getIdentifier(),
+                    'href'       => $itemRef->getHref(),
+                    'uri'        => $parts[0]
+                ];
             }
         }
 

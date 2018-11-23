@@ -72,7 +72,7 @@ class StaticDeliveryExporter extends ConfigurableService
 
         $this->logDebug("Transforming Delivery Assembly '" . $compiledDelivery->getUri() . "' into a static Assembly...");
 
-        AssembliesUtils::transformToStaticAssembly($zipArchive);
+        $zipArchive = AssembliesUtils::transformToStaticAssembly($zipArchive);
 
         // We now have to instantiate a Delivery Execution of this Delivery, in order to be able
         // to provide the initialization data to an assembly consumer.
