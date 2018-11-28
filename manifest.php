@@ -23,11 +23,11 @@ return array(
     'label' => 'Static deliveries',
     'description' => 'TAO Static Deliveries to expose static delivery with runtime and map.',
     'license' => 'GPL-2.0',
-    'version' => '0.1.0',
+    'version' => '0.2.0',
     'author' => 'Open Assessment Technologies SA',
     'requires' => array(
         'tao' => '>=19.17.1',
-        'taoQtiTest' => '>=25.7.0',
+        'taoQtiTest' => '>=29.2.0',
         'taoDelivery' => '>=9.12.0',
         'taoDeliveryRdf' => '>=5.0.0',
     ),
