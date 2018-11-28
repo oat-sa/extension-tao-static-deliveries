@@ -41,6 +41,7 @@ class AssembliesUtilsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($zipArchive->getFromName('delivery.rdf'));
         $this->assertFalse($zipArchive->getFromName('manifest.json'));
+        $this->assertNotFalse($zipArchive->getFromName('test-metadata.json'));
         $this->assertNotFalse($zipArchive->getFromName('items/Item-Q01/item.json'));
         $this->assertNotFalse($zipArchive->getFromName('items/Item-Q01/portableElements.json'));
         $this->assertNotFalse($zipArchive->getFromName('items/Item-Q01/variableElements.json'));
@@ -73,6 +74,7 @@ class AssembliesUtilsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($zipArchive->getFromName('delivery.rdf'));
         $this->assertFalse($zipArchive->getFromName('manifest.json'));
+        $this->assertFalse($zipArchive->getFromName('test-metadata.json'));
         $this->assertNotFalse($zipArchive->getFromName('items/Item-Q01/item.json'));
         $this->assertNotFalse($zipArchive->getFromName('items/Item-Q01/portableElements.json'));
         $this->assertNotFalse($zipArchive->getFromName('items/Item-Q01/variableElements.json'));

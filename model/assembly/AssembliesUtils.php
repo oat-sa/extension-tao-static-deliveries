@@ -81,6 +81,13 @@ class AssembliesUtils
             \tao_helpers_File::renameInZip($zipArchive, $oldname, $newname);
         }
 
+        //move the test metadata file at the root of the archive
+        $testMetadataFile = self::getTestMetadataPath($files);
+        if ($testMetadataFile != false){
+
+            \tao_helpers_File::renameInZip($zipArchive, $testMetadataFile, \taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_METADATA_FILENAME);
+        }
+
         \tao_helpers_File::excludeFromZip($zipArchive, '/delivery\.rdf$/');
         \tao_helpers_File::excludeFromZip($zipArchive, '/manifest\.json$/');
         \tao_helpers_File::excludeFromZip($zipArchive, '/\.idx$/');
@@ -200,5 +207,21 @@ class AssembliesUtils
         }
 
         return null;
+    }
+
+    /**
+     * Get the path of the test metadata file within the archive files
+     * @param array $zipFiles
+     * @return false|string the file path
+     */
+    private static function getTestMetadataPath(array $zipFiles)
+    {
+        foreach ($zipFiles as $zipFile) {
+            if (preg_match('/' . preg_quote(\taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_METADATA_FILENAME) . '$/', $zipFile) === 1) {
+                return $zipFile;
+            }
+        }
+
+        return false;
     }
 }
