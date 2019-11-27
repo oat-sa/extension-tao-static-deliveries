@@ -135,6 +135,11 @@ class StaticDeliveryExporter extends ConfigurableService
 
         $runnerService = $this->getServiceLocator()->get(QtiRunnerService::SERVICE_ID);
 
+        // we have to initialize $_SERVER parameters to create context
+        if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+        }
+
         return [
             'testData' => $runnerService->getTestData($runnerServiceContext),
             'testContext' => $runnerService->getTestContext($runnerServiceContext),

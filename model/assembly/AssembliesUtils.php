@@ -197,7 +197,7 @@ class AssembliesUtils
     private static function getTestDefinition(\ZipArchive $zipArchive, array $zipFiles)
     {
         foreach ($zipFiles as $zipFile) {
-            if (preg_match('/' . preg_quote(\taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_FILENAME) . '$/', $zipFile) === 1) {
+            if (mb_strpos($zipFile, \taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_FILENAME) !== false) {
                 $testDefinition = new PhpDocument();
                 $content = $zipArchive->getFromName($zipFile);
                 $testDefinition->loadFromString($content);
