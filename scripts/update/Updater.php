@@ -24,6 +24,7 @@ namespace oat\taoStaticDeliveries\scripts\update;
  * Class Updater
  *
  * @author Moyon Camille <camille@taotesting.com>
+ * @deprecated use migrations instead. See https://github.com/oat-sa/generis/wiki/Tao-Update-Process
  */
 class Updater extends \common_ext_ExtensionUpdater
 {
@@ -38,6 +39,11 @@ class Updater extends \common_ext_ExtensionUpdater
     public function update($initialVersion)
     {
         $this->skip('0.0.0', '0.2.0');
+        
+        //Updater files are deprecated. Please use migrations.
+        //See: https://github.com/oat-sa/generis/wiki/Tao-Update-Process
+
+        $this->setVersion($this->getExtension()->getManifest()->getVersion());
     }
 
 }
